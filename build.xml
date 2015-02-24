@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="TMCAndroid" default="dist" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
+   
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="test" location="test"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="bin"/>
+  <property name="doc.src"  location="doc"/>
+  <property name="doc.dist"  location="docdist"/>
+  <property name="version" value="1.0.0"/>
+  <property name="server.ip" value="52.1.96.115"/>
+  <property name="server.key" value="/Users/chengyi/Documents/keys/tr-demo.pem"/>
+  
+  <target name="init">
+    <!-- Create the time stamp -->
+    <tstamp/>
+    <!-- Create the build directory structure used by compile -->
+    <mkdir dir="${build}"/>
+    <mkdir dir="${doc.dist}/apidoc"/>
+  </target>
+  
+  <target name="dist">
+	  <jar destfile="${dist}/tmcandroid-${version}.jar">
+	      <fileset dir="${dist}/classes"
+	       includes="snae/tmcandroid/**"
+	       excludes="snae/tmcandroid/R*.class, snae/tmcandroid/BuildConfig.class"/>
+	      <fileset dir="${test}"/>
+	  </jar>
+      <antcall target="doc">
+      </antcall>
+  </target>
+
+  <fileset id="doc.pathid" dir="${doc.dist}" >
+  </fileset>
+	
+  <target name="publish">
+    <sshexec host="${server.ip}" username="ec2-user" keyfile="${server.key}" 
+    	command="mkdir -p /home/ec2-user/jetty/webapps/ROOT/snae/doc/${version}"/>
+	<scp trust="yes" sftp="true" todir="ec2-user@${server.ip}:/home/ec2-user/jetty/webapps/ROOT/snae/doc/${version}" 
+		keyfile="${server.key}">
+		<fileset refid="doc.pathid"/>
+	</scp>
+	<sshexec host="${server.ip}" username="ec2-user" keyfile="${server.key}" 
+    	command="mkdir -p /home/ec2-user/jetty/webapps/ROOT/snae/download"/>
+	<scp trust="yes" sftp="true" todir="ec2-user@${server.ip}:/home/ec2-user/jetty/webapps/ROOT/snae/download" 
+		keyfile="${server.key}">
+		<fileset dir="${dist}">
+		    <include name="tmcandroid-${version}.jar"/>
+		</fileset>
+	</scp>
+  </target>
+  
+  <target name="clean"
+        description="clean up" >
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+  </target>
+  
+  <target name="doc" depends="init" description="generate documentation">
+    <javadoc sourcepath="${src}" destdir="${doc.dist}/apidoc"/>
+  </target>
+  
+  <target name="resolve">
+    <ivy:cachepath pathid="build.path">
+        <dependency org="org.markdownj" name="markdownj" rev="0.3.0-1.0.2b4" conf="default"/>
+    </ivy:cachepath>
+  </target>
+
+  <target name="md" depends="resolve">
+  </target>
+</project>
