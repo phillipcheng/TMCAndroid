@@ -23,7 +23,11 @@ public class UserBonusResult {
 			ubr.setMessage(jobj.getString(JSON_MESSAGE));
 			if (jobj.has(JSON_BONUS)){
 				JSONObject ub = jobj.getJSONObject(JSON_BONUS);
-				ubr.setBonus(UserBonus.fromJSONObject(ub));
+				if (ub!=null){
+					ubr.setBonus(UserBonus.fromJSONObject(ub));
+				}else{
+					Log.w(TAG, JSON_BONUS + " in result is null");
+				}
 			}
 		}catch(Exception e){
 			Log.e(TAG, "", e);

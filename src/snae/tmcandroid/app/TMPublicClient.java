@@ -34,11 +34,11 @@ public class TMPublicClient {
 	/**
 	 * 
 	 * @param tenantId
-	 * @param userId
+	 * @param userName
 	 * @return
 	 */
-	public List<UserBonus> listUserBonus(int tenantId, String userId) {
-		String strUrl = String.format("%s%s/bonus/%d?userId=%s", server, service, tenantId, userId);
+	public List<UserBonus> listUserBonus(int tenantId, String userName) {
+		String strUrl = String.format("%s%s/bonus/%d?userName=%s", server, service, tenantId, userName);
 		String rsp = TMHttpUtil.getContentFromGetURL(strUrl);
 		try{
 			JSONArray jsarray = new JSONArray(rsp);
@@ -76,11 +76,11 @@ public class TMPublicClient {
 	/**
 	 * Get Quota to Check Balance
 	 * @param tenantId
-	 * @param userId
+	 * @param userName
 	 */
-	public UserQuota getQuota(int tenantId, String userId) {
+	public UserQuota getQuota(int tenantId, String userName) {
 		try{
-			String strUrl = String.format("%s%s/quota/%d?userId=%s", server, service, tenantId, userId);
+			String strUrl = String.format("%s%s/quota/%d?userName=%s", server, service, tenantId, userName);
 			String rsp = TMHttpUtil.getContentFromGetURL(strUrl);
 			JSONArray jsarray = new JSONArray(rsp);
 			if (jsarray.length()>=1){
@@ -99,14 +99,14 @@ public class TMPublicClient {
 	 * 
 	 * @param tenantId
 	 * @param promotionId
-	 * @param userId
+	 * @param userName
 	 * @param userProperties, the user properties passed to be used by Promotion Rule
 	 * @return UserBonusResult
 	 */
 	public UserBonusResult grabBonus(int tenantId, int promotionId, 
-			String userId, Map<String, String> userProperties) {
+			String userName, Map<String, String> userProperties) {
 		String strUrl = String.format("%s%s/getbonus/%d", server, service, tenantId);
-		String query = String.format("promotionId=%d&userId=%s", promotionId, userId);
+		String query = String.format("promotionId=%d&userName=%s", promotionId, userName);
 		String rsp = TMHttpUtil.getConentFromPostURL(strUrl, query);
 		try{
 			JSONObject jobj = new JSONObject(rsp);
