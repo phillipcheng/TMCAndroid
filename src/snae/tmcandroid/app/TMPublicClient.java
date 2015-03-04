@@ -82,13 +82,17 @@ public class TMPublicClient {
 		try{
 			String strUrl = String.format("%s%s/quota/%d?userName=%s", server, service, tenantId, userName);
 			String rsp = TMHttpUtil.getContentFromGetURL(strUrl);
-			JSONArray jsarray = new JSONArray(rsp);
-			if (jsarray.length()>=1){
-				return UserQuota.fromJSONObject(jsarray.getJSONObject(0));
-			}else{
-				Log.e(TAG, String.format("jsarry from result size is 0. rsp is %s", rsp));
-				return null;
-			}
+                        if (rsp == null) {
+                           Log.w(TAG, "no quota found! " + strUrl);
+                          return null;
+                        } 
+
+                        JSONArray jsarray = new JSONArray(rsp);
+                        if (jsarray.length() < 1) {
+                          Log.w(TAG, "quota array empty! " + strUrl);
+                          return null;
+                        }  
+                        return UserQuota.fromJSONObject((JSONObject) jsarray.get(0));
 		}catch(Exception e){
 			Log.e(TAG, "", e);
 			return null;

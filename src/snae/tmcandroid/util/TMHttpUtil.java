@@ -55,6 +55,7 @@ public class TMHttpUtil {
 	
 	public static String getContentFromGetURL(String strUrl){
 		try{
+            Log.w(TAG, "getContentFromGetURL:" + strUrl);
 			URL url = new URL(strUrl);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestProperty("Content-Type", form);
@@ -62,6 +63,7 @@ public class TMHttpUtil {
 			if (con.getResponseCode()==HttpURLConnection.HTTP_OK){
 				InputStream is = con.getInputStream();
 				String rspBody = TMHttpUtil.getStringFromInputStream(is);
+                Log.w(TAG, rspBody);
 				is.close();
 				return rspBody;
 			}else{
@@ -75,6 +77,7 @@ public class TMHttpUtil {
 	
 	public static String getConentFromPostURL(String strUrl, String query){
 		try{
+            Log.w(TAG, "getContentFromPostURL:" + strUrl + " query:" + query);
 			HttpURLConnection con = (HttpURLConnection) new URL(strUrl).openConnection();
 			con.setDoOutput(true); //post
 			con.setRequestProperty("Content-Type", form);
@@ -85,6 +88,7 @@ public class TMHttpUtil {
 			if (con.getResponseCode()==HttpURLConnection.HTTP_OK){
 				InputStream is = con.getInputStream();
 				String rspBody = TMHttpUtil.getStringFromInputStream(is);
+                Log.w(TAG, rspBody);
 				is.close();
 				return rspBody;
 			}else{
