@@ -10,12 +10,10 @@ public class TMURL {
 	
 	URL url;
 	Proxy proxy = null;
-	String sessionId = null;
 	
-	public TMURL(URL url, Proxy proxy, String sessionId){
+	public TMURL(URL url, Proxy proxy){
 		this.url = url;
 		this.proxy = proxy;
-		this.sessionId = sessionId;
 	}
 	
 	//for normal access
@@ -32,7 +30,6 @@ public class TMURL {
 			return (HttpURLConnection) url.openConnection();
 		}else{
 			HttpURLConnection con = (HttpURLConnection) url.openConnection(proxy);
-			con.setRequestProperty(TMURLManager.HEADER_SESSIONID, sessionId);
 			return con;
 		}
 	}

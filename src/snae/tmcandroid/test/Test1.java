@@ -16,7 +16,7 @@ import android.util.Log;
 
 public class Test1 extends TestCase{
 	private static final String TAG="Test1";
-	private static final String url1 = "http://news.sina.com.cn";
+	private static final String url1 = "http://www.ebay.com/";
 	
 	public void test1(){
 		
@@ -41,7 +41,7 @@ public class Test1 extends TestCase{
 		if (ret){
 			try{
 				int i=0;
-				while(i<20){
+				while(i<5){
 					i++;
 					//
 					TMURL tmUrl = tmMgr.getUrl(url1);
