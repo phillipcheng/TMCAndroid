@@ -20,7 +20,6 @@ public class TMURLManager {
 	private static String HEADER_CMDVAL_START = "start";
 	private static String HEADER_CMDVAL_STOP = "stop";
 	
-	public static String HEADER_SESSIONID = "dsessionid";
 	private static String HEADER_USERID = "userid";
 	private static String HEADER_TENANTID= "tenantid";
 	
@@ -36,7 +35,6 @@ public class TMURLManager {
 	public static int RSP_REASON_NOTSET=-1;
 
 	private Proxy proxy;
-	private String userSessionId;
 	private int rejectReasonId = RSP_REASON_NOTSET;
 	
 	public static int STATUS_DISCONNECTED=0;
@@ -65,15 +63,8 @@ public class TMURLManager {
             if (code == HttpURLConnection.HTTP_OK) {
             	InputStream is = con.getInputStream();
             	try{
-	            	String sessionVal = con.getHeaderField(HEADER_SESSIONID);
-	            	if (sessionVal!=null){
-	                    userSessionId = sessionVal;
-	            		setStatus(STATUS_CONNECTED);
-	                    return true;
-	            	}else{
-	            		setStatus(STATUS_ERROR);
-	            		return false;
-	            	}
+            		setStatus(STATUS_ERROR);
+            		return false;
             	}finally{
 	            	if (is!=null){
 	    				try{
@@ -102,7 +93,6 @@ public class TMURLManager {
 			URL url = new URL(START_URL);
 			con = (HttpURLConnection) url.openConnection(proxy);
 			con.setRequestProperty(HEADER_CMD, HEADER_CMDVAL_STOP);
-			con.setRequestProperty(HEADER_SESSIONID, userSessionId);
 			con.setRequestMethod("GET");
 	        is = con.getInputStream();
 	        int code = con.getResponseCode();
@@ -131,7 +121,7 @@ public class TMURLManager {
 	
 	public TMURL getUrl(String strUrl) throws MalformedURLException{
 		URL url = new URL(strUrl);
-		return new TMURL(url, proxy, userSessionId);
+		return new TMURL(url, proxy);
 	}
 
 	public int getStatus() {
