@@ -2,6 +2,8 @@ package snae.tmcandroid.test;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.ProxySelector;
+import java.net.URL;
 
 import junit.framework.TestCase;
 
@@ -9,14 +11,19 @@ import snae.tmcandroid.app.TMPublicClient;
 import snae.tmcandroid.app.UserBonus;
 import snae.tmcandroid.app.UserBonusResult;
 import snae.tmcandroid.app.UserQuota;
-import snae.tmcandroid.traffic.TMURL;
-import snae.tmcandroid.traffic.TMURLManager;
+
+import snae.tmcandroid.traffic.TMManager;
 import snae.tmcandroid.util.TMHttpUtil;
 import android.util.Log;
 
 public class Test1 extends TestCase{
 	private static final String TAG="Test1";
 	private static final String url1 = "http://www.ebay.com/";
+	
+	public void testStopSession(){
+		TMManager tmMgr = new TMManager();
+		tmMgr.end();
+	}
 	
 	public void test1(){
 		
@@ -36,7 +43,7 @@ public class Test1 extends TestCase{
 //			Log.i(TAG, String.format("user quota:%s", uq.toString()));
 //		}
 		
-		TMURLManager tmMgr = new TMURLManager();
+		TMManager tmMgr = new TMManager();
 		boolean ret = tmMgr.start(userName, tenantId+"");
 		if (ret){
 			try{
@@ -44,8 +51,8 @@ public class Test1 extends TestCase{
 				while(i<5){
 					i++;
 					//
-					TMURL tmUrl = tmMgr.getUrl(url1);
-					HttpURLConnection con = tmUrl.getHttpUrlConnection();
+					URL url = new URL(url1);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection();
 					int statusCode = con.getResponseCode();
 					if (statusCode == HttpURLConnection.HTTP_OK){
 						InputStream is = con.getInputStream();
