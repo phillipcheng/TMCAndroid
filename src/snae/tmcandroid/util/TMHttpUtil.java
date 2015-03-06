@@ -8,13 +8,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import android.util.Log;
 
-import snae.tmcandroid.traffic.TMURL;
-import snae.tmcandroid.traffic.TMURLManager;
+import snae.tmcandroid.traffic.TMManager;
 
 public class TMHttpUtil {
 	private static final String TAG="TMHttpUtil";
@@ -41,9 +37,9 @@ public class TMHttpUtil {
 		return getStringFromInputStream(in, null);
 	}
 	
-	public static void getAndConsumeUrl(TMURLManager tmMgr, String url) throws IOException{
-		TMURL tmurl1 = tmMgr.getUrl(url);
-		HttpURLConnection con = tmurl1.getHttpUrlConnection();
+	public static void getAndConsumeUrl(TMManager tmMgr, String url) throws IOException{
+		URL tmurl1 = new URL(url);
+		HttpURLConnection con = (HttpURLConnection) tmurl1.openConnection();
 		con.setRequestMethod("GET");
         int code = con.getResponseCode();
 		if (code == HttpURLConnection.HTTP_OK){
