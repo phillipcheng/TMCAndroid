@@ -40,6 +40,9 @@ class TMProxySelector extends ProxySelector{
 	}
 }
 
+/**
+ * @version 1.0.0
+ */
 public class TMManager {
 	public static String LOG_TAG="SNAE_ANDROID";
 	
@@ -59,12 +62,33 @@ public class TMManager {
 	
 	//http rsp custom headers
 	private static String HEADER_REASON = "rejectreason";
+	/**
+	 * session established successfully
+	 */
 	public static int RSP_REASON_VAL_SUCCESS=0;
+	/**
+	 * system error
+	 */
 	public static int RSP_REASON_VAL_NOREQHEAD=1;
+	/**
+	 * system error
+	 */
 	public static int RSP_REASON_VAL_REQHEAD_MISSINGINFO=2;
+	/**
+	 * session can't be established because user authentication failed
+	 */
 	public static int RSP_REASON_VAL_NOUSER=3;
+	/**
+	 * session can't be established because user has no balance.
+	 */
 	public static int RSP_REASON_VAL_NOBAL=4;
+	/**
+	 * request can't be completed since the session has not established
+	 */
 	public static int RSP_REASON_VAL_NOUSERSESSION=5;
+	/**
+	 * session can't be established because the current IP already has a session established.
+	 */
 	public static int RSP_REASON_VAL_USERONLINE=6;
 	public static int RSP_REASON_NOTSET=-1;
 
@@ -81,12 +105,18 @@ public class TMManager {
 	public TMManager(){
 	}
 	
+	/**
+	 * start the session
+	 * @param userId
+	 * @param tenantId
+	 * @return true means success, if false use getRejectReasonId()
+	 */
 	public boolean start(String userId, String tenantId){
 		
 		orgProxySelector = ProxySelector.getDefault();
 		ProxySelector.setDefault(new TMProxySelector(proxyhost, proxyport));
 		
-		setStatus(STATUS_CONNECTING);
+		status = (STATUS_CONNECTING);
 		HttpURLConnection con = null;
 		
 		try {
@@ -98,15 +128,15 @@ public class TMManager {
 			con.setRequestMethod("GET");
 	        int code = con.getResponseCode();
             if (code == HttpURLConnection.HTTP_OK) {
-            	setStatus(STATUS_CONNECTED);
+            	status =(STATUS_CONNECTED);
             	return true;
             }else{
             	rejectReasonId = con.getHeaderFieldInt(HEADER_REASON, RSP_REASON_NOTSET);
-            	setStatus(STATUS_ERROR);
+            	status =(STATUS_ERROR);
             	return false;
             }
 		}catch(Exception e){
-			setStatus(STATUS_ERROR);
+			status =(STATUS_ERROR);
 			Log.e(LOG_TAG, "exeption in start session.", e);
 			return false;
 		}finally{
@@ -116,8 +146,12 @@ public class TMManager {
 		}
 	}
 	
+	/**
+	 * Stop the session
+	 * @return
+	 */
 	public boolean end(){
-		setStatus(STATUS_DISCONNECTING);
+		status =(STATUS_DISCONNECTING);
 		HttpURLConnection con = null;
 		try {
 			URL url = new URL(START_URL);
@@ -126,15 +160,15 @@ public class TMManager {
 			con.setRequestMethod("GET");
 	        int code = con.getResponseCode();
             if (code == HttpURLConnection.HTTP_OK) {
-            	setStatus(STATUS_DISCONNECTED);
+            	status =(STATUS_DISCONNECTED);
                 return true;
             }else{
             	rejectReasonId = con.getHeaderFieldInt(HEADER_REASON, RSP_REASON_NOTSET);
-        		setStatus(STATUS_ERROR);
+            	status =(STATUS_ERROR);
         		return false;
             }
 		}catch(Exception e){
-			setStatus(STATUS_ERROR);
+			status =(STATUS_ERROR);
 			Log.e(LOG_TAG, "exception in closing session.", e);
 			return false;
 		}finally{
@@ -146,16 +180,7 @@ public class TMManager {
 		return status;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
-
 	public int getRejectReasonId() {
 		return rejectReasonId;
 	}
-
-	public void setRejectReasonId(int rejectReasonId) {
-		this.rejectReasonId = rejectReasonId;
-	}
-
 }

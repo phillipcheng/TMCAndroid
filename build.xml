@@ -22,12 +22,11 @@
   </target>
   
   <target name="dist">
-	  <jar destfile="${dist}/tmcandroid-${version}.jar">
+	<jar destfile="${dist}/tmcandroid-${version}.jar">
 	      <fileset dir="${dist}/classes"
 	       includes="snae/tmcandroid/**"
-	       excludes="snae/tmcandroid/R*.class, snae/tmcandroid/BuildConfig.class"/>
-	      <fileset dir="${test}"/>
-	  </jar>
+	       excludes="snae/tmcandroid/test/*.class, snae/tmcandroid/R*.class, snae/tmcandroid/BuildConfig.class"/>
+	</jar>
       <antcall target="doc">
       </antcall>
   </target>
@@ -56,10 +55,23 @@
         description="clean up" >
     <!-- Delete the ${build} and ${dist} directory trees -->
     <delete dir="${build}"/>
+    <delete dir="${doc.dist}/apidoc"/>
   </target>
   
   <target name="doc" depends="init" description="generate documentation">
-    <javadoc sourcepath="${src}" destdir="${doc.dist}/apidoc"/>
+    <javadoc 
+	version="true"
+	destdir="${doc.dist}/apidoc"
+	windowtitle="SNAE TMC Android SDK">
+	
+	<packageset dir="${src}" defaultexcludes="yes">	
+		<exclude name="snae/tmcandroid/test/**"/>
+		<exclude name="snae/tmcandroid/util/**"/>
+	</packageset>
+
+	<doctitle><![CDATA[<h1>SNAE TMC Android SDK</h1>]]></doctitle>
+	<bottom><![CDATA[<i>Copyright &#169; 2015 Doxings Corp. All Rights Reserved.</i>]]></bottom>	
+    </javadoc>
   </target>
   
   <target name="resolve">

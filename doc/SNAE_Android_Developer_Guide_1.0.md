@@ -51,34 +51,27 @@ UserQuota有balance字段表示余额。
 ## 红包使用借口
 创建TMURLManager
 
-	TMURLManager tmUrlMgr = new TMURLManager(proxyhost, proxyport); 
+	TMManager tmMgr = new TMManager(); 
 
 ###用户开始会话
 
 
-	boolean ret = tmUrlMgr.start(user, tenantId);
+	boolean ret = tmMgr.start(user, tenantId);
 如果ret返回false，会话创建失败。
 
 通过getRejectReasonId, 检查原因。
 
 	int rejectId = tmMgr.getRejectReasonId();
-如果成功，tmUrlMgr中保存了会话信息，使用tmUrlMgr创建URL。
+
  
 ###使用红包流量
-	TMURL tmurl1 = tmMgr.getUrl(url);
-
-	HttpURLConnection con = tmurl1.getHttpUrlConnection();
-	//do anything needed with HttpUrlConnection
-	if (con.getResponseCode() == HttpURLConnection.HTTP_OK){
-		InputStream is = con.getInputStream();
-		//get data from response
-	}		
+	用户程序不用修改	
     
 ###红包流量用完
 
-	if (statusCode == HttpURLConnection.HTTP_UNAUTHORIZED){
-		//红包流量用完
-	}
+	request会得到error status code ＝HTTP_UNAUTHORIZED
+	
+	表示红包流量用完
 
 ###用户停止会话
 	tmMgr.end();

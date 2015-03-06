@@ -4,6 +4,11 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
+/**
+ * 
+ * @version 1.0.0
+ *
+ */
 public class UserPromotion {
     private static final String TAG="TMPublicClient";
 

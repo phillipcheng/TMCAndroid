@@ -28,9 +28,9 @@ public class Test1 extends TestCase{
 	public void test1(){
 		
 		Log.i(TAG, "hello");
-		int tenantId = 3;
+		int tenantId = 1;
 		int promotionId = 2;
-		String userName = "1234";
+		String userName = "123";
 //		TMPublicClient publicClient = new TMPublicClient();
 //		UserQuota uq = publicClient.getQuota(tenantId, userId);
 //		Log.i(TAG, String.format("user quota:%s", uq.toString()));

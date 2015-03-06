@@ -4,6 +4,12 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
+
+/**
+ * 
+ * @version 1.0.0
+ *
+ */
 public class UserBonusResult {
 	private static final String TAG="TMPublicClient";
 	

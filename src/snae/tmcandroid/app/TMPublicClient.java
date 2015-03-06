@@ -11,6 +11,11 @@ import android.util.Log;
 
 import snae.tmcandroid.util.TMHttpUtil;
 
+/**
+ * 
+ * @version 1.0.0
+ *
+ */
 public class TMPublicClient {
 	
 	private static final String TAG="TMPublicClient";
