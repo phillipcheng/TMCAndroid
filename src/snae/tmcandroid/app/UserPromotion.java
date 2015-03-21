@@ -5,12 +5,11 @@ import android.util.Log;
 import org.json.JSONObject;
 
 /**
- * 
  * @version 1.0.0
- *
  */
 public class UserPromotion {
-    private static final String TAG="TMPublicClient";
+
+    private static final String TAG = "TMPublicClient";
 
     /**
      * The id.
@@ -19,21 +18,21 @@ public class UserPromotion {
     public static final String JSON_ID = "id";
 
     /**
-	 * The name.
-	 */
-	private String name;
+     * The name.
+     */
+    private String name;
     public static final String JSON_NAME = "name";
 
     /**
-	 * The start time.
-	 */
-	private long startTime;
+     * The start time.
+     */
+    private long startTime;
     public static final String JSON_START_TIME = "startTime";
 
     /**
-	 * The end time.
-	 */
-	private long endTime;
+     * The end time.
+     */
+    private long endTime;
     public static final String JSON_END_TIME = "endTime";
 
     /**
@@ -41,6 +40,9 @@ public class UserPromotion {
      */
     private String rule;
     public static final String JSON_RULE = "rule";
+
+    private String description;
+    public static final String JSON_DESC = "description";
 
     public long getId() {
         return id;
@@ -81,19 +83,28 @@ public class UserPromotion {
     public void setRule(String rule) {
         this.rule = rule;
     }
-	
-	public static UserPromotion fromJSONObject(JSONObject jobj){
-		UserPromotion ub = new UserPromotion();
-        try{
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public static UserPromotion fromJSONObject(JSONObject jobj) {
+        UserPromotion ub = new UserPromotion();
+        try {
             ub.setId(jobj.getLong(JSON_ID));
             ub.setName(jobj.getString(JSON_NAME));
             ub.setStartTime(jobj.getLong(JSON_START_TIME));
             ub.setEndTime(jobj.getLong(JSON_END_TIME));
             ub.setRule(jobj.getString(JSON_RULE));
-        }catch(Exception e){
+            ub.setDescription(jobj.getString(JSON_DESC));
+        } catch (Exception e) {
             Log.e(TAG, "", e);
         }
-		return ub;
-	}
+        return ub;
+    }
 
 }
