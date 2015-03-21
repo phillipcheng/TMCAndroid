@@ -20,9 +20,17 @@ public class Test1 extends TestCase{
 	private static final String TAG="Test1";
 	private static final String url1 = "http://www.ebay.com/";
 	
+	private String user="123";
+	private String tenantId = "1";
+	
 	public void testStopSession(){
 		TMManager tmMgr = new TMManager();
 		tmMgr.end();
+	}
+	
+	public void testStartSession(){
+		TMManager tmMgr = new TMManager();
+		tmMgr.start(user, tenantId);
 	}
 	
 	public void test1(){
