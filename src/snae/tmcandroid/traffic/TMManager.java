@@ -59,8 +59,8 @@ public class TMManager {
 
     private static final String START_URL = "http://www.doxings.com";//any url
     //private static final String proxyhost = "127.0.0.1";
-    private static final String proxyhost = "52.1.96.115";
-    private static final int proxyport = 8080;
+    private String proxyhost = "52.1.96.115";
+    private int proxyport = 8080;
     public static final int RSP_REASON_VAL_SUCCESS = 0;
     public static final int RSP_REASON_VAL_NOREQHEAD = 1;
     public static final int RSP_REASON_VAL_REQHEAD_MISSINGINFO = 2;
@@ -88,7 +88,13 @@ public class TMManager {
 
     private int status = STATUS_DISCONNECTED;
 
-    public TMManager() {
+    public TMManager(){
+    	
+    }
+    
+    public TMManager(String proxyHost, int proxyPort) {
+    	this.proxyhost = proxyHost;
+    	this.proxyport = proxyPort;
     }
 
     private static Object getFieldValueSafely(Field mWebViewCoreField, Object webViewClassic) {
@@ -356,9 +362,28 @@ public class TMManager {
         return false;
     }
 
-    public boolean start(String userId, String tenantId) {
+    
 
-        orgProxySelector = ProxySelector.getDefault();
+    public boolean setProxy(WebView webview) {
+        String applicationClassName = "android.app.Application";
+        return setProxy(webview, applicationClassName);
+    }
+
+    public boolean clearProxy(WebView webview) {
+        String applicationClassName = "android.app.Application";
+        return clearProxy(webview, applicationClassName);
+    }
+
+    public boolean setProxy(WebView webview, String applicationClassName) {
+        return setProxy(webview, proxyhost, proxyport, applicationClassName, false);
+    }
+
+    public boolean clearProxy(WebView webview, String applicationClassName) {
+        return setProxy(webview, proxyhost, proxyport, applicationClassName, true);
+    }
+    
+    public boolean start(String userId, String tenantId) {
+    	orgProxySelector = ProxySelector.getDefault();
         ProxySelector.setDefault(new TMProxySelector(proxyhost, proxyport));
 
         setStatus(STATUS_CONNECTING);
@@ -389,34 +414,9 @@ public class TMManager {
                 ProxySelector.setDefault(orgProxySelector);
             }
         }
+        
     }
-
-    public boolean setProxy(WebView webview) {
-        String applicationClassName = "android.app.Application";
-        return setProxy(webview, applicationClassName);
-    }
-
-    public boolean clearProxy(WebView webview) {
-        String applicationClassName = "android.app.Application";
-        return clearProxy(webview, applicationClassName);
-    }
-
-    public boolean setProxy(WebView webview, String applicationClassName) {
-        return setProxy(webview, proxyhost, proxyport, applicationClassName, false);
-    }
-
-    public boolean clearProxy(WebView webview, String applicationClassName) {
-        return setProxy(webview, proxyhost, proxyport, applicationClassName, true);
-    }
-
-//    private static Object getFieldValueSafely(Field field, Object classInstance) throws IllegalArgumentException, IllegalAccessException {
-//        boolean oldAccessibleValue = field.isAccessible();
-//        field.setAccessible(true);
-//        Object result = field.get(classInstance);
-//        field.setAccessible(oldAccessibleValue);
-//        return result;
-//    }
-
+    
     public boolean end() {
         setStatus(STATUS_DISCONNECTING);
         HttpURLConnection con = null;
@@ -447,7 +447,7 @@ public class TMManager {
         return status;
     }
 
-    public void setStatus(final int STATUS) {
+    private void setStatus(int status) {
         this.status = status;
 
         Log.w(LOG_TAG, "new status:" + status);
